@@ -1,0 +1,41 @@
+\input{preamble}
+
+\makeatletter 
+\newcommand{\wpl}[2]{%
+\begin{scope}[/pgfplots/stack plots=y]
+\addplot[draw=none] table[x=date,y=lol] {#1} \closedcycle;
+\addplot[fill=#2!60!white,opacity=0.5,draw=none] table[x=date,y expr=\thisrow{loh}-\thisrow{lol}] {#1} \closedcycle;
+\addplot[fill=#2!10!white,opacity=0.5,draw=none] table[x=date,y expr=\thisrow{hil}-\thisrow{loh}] {#1} \closedcycle;
+\addplot[fill=#2!60!white,opacity=0.5,draw=none] table[x=date,y expr=\thisrow{hih}-\thisrow{hil}] {#1} \closedcycle;
+\pgfplots@stacked@isfirstplottrue
+\addplot[forget plot,draw=none] table[x=date,y expr=0] {#1};
+\end{scope}
+\addplot[draw=#2!80!black] table[x=date,y=lo] {#1};
+\addplot[draw=#2!80!black] table[x=date,y=hi] {#1};
+}
+\makeatother
+
+\begin{document}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[date coordinates in=x,width=\textwidth,xmin=2010-01-01,xmax=2010-12-31,extra x ticks={2010-01-01},xticklabel={\footnotesize\month/\day},axis x line*=bottom,axis y line*=left,ymin=0,ymax=100,table/col sep=comma, axis on top]
+
+\pgfplotstableread{oakland.dat}{\okdat}
+\wpl{\okdat}{yellow}
+\pgfplotstableread{berkeley.dat}{\bkdat}
+\wpl{\bkdat}{green}
+\pgfplotstableread{redwood_city.dat}{\rwdat}
+\wpl{\rwdat}{orange}
+\pgfplotstableread{palo_alto.dat}{\padat}
+\wpl{\padat}{red}
+\pgfplotstableread{sf_oceanside.dat}{\sodat}
+\wpl{\sodat}{purple}
+\pgfplotstableread{sf.dat}{\sfdat}
+\wpl{\sfdat}{blue}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\end{document}
